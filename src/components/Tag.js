@@ -31,9 +31,11 @@ class Tag extends Component {
     const tagComponent = ( <span
       className={ClassNames('tag-wrapper', classNames.tag, className)}
       style={{opacity: isDragging ? 0 : 1, 'cursor': canDrag(props) ? 'move' : 'auto'}}
-      onClick={props.onTagClicked}
-      onKeyDown={props.onTagClicked}
-      onTouchStart={props.onTagClicked}>
+      onClick={props.onClick}
+      onKeyDown={props.onKeyDown}
+      onTouchStart={props.onClick}
+      tabIndex={0}
+      aria-label={`Tag ${label}`}>
       {label}
       <RemoveComponent
         tag={props.tag}
@@ -57,7 +59,8 @@ Tag.propTypes = {
   }),
   moveTag: PropTypes.func,
   removeComponent: PropTypes.func,
-  onTagClicked: PropTypes.func,
+  onClick: PropTypes.func,
+  onKeyDown: PropTypes.func,
   classNames: PropTypes.object,
   readOnly: PropTypes.bool,
   connectDragSource: PropTypes.func.isRequired,

@@ -45,10 +45,12 @@ class ReactTags extends Component {
     handleDrag: PropTypes.func,
     handleFilterSuggestions: PropTypes.func,
     handleTagClick: PropTypes.func,
+    handleTagKeyDown: PropTypes.func,
     allowDeleteFromEmptyInput: PropTypes.bool,
     allowAdditionFromPaste: PropTypes.bool,
     allowDragDrop: PropTypes.bool,
     resetInputOnDelete: PropTypes.bool,
+    focusInputOnTagClick: PropTypes.bool,
     handleInputChange: PropTypes.func,
     handleInputFocus: PropTypes.func,
     handleInputBlur: PropTypes.func,
@@ -70,6 +72,7 @@ class ReactTags extends Component {
     ),
     allowUnique: PropTypes.bool,
     renderSuggestion: PropTypes.func,
+    textInputRef: PropTypes.func,
   };
 
   static defaultProps = {
@@ -85,6 +88,7 @@ class ReactTags extends Component {
     allowDeleteFromEmptyInput: true,
     allowAdditionFromPaste: true,
     resetInputOnDelete: true,
+    focusInputOnTagClick: false,
     autocomplete: false,
     readOnly: false,
     allowUnique: true,
@@ -178,10 +182,52 @@ class ReactTags extends Component {
     if (this.props.handleTagClick) {
       this.props.handleTagClick(i, e);
     }
-    if (!this.props.resetInputOnDelete) {
-      this.textInput && this.textInput.focus();
+    if (this.props.focusInputOnTagClick) {
+      if (!this.props.resetInputOnDelete) {
+        this.textInput && this.textInput.focus();
+      } else {
+        this.resetAndFocusInput();
+      }
     } else {
-      this.resetAndFocusInput();
+      document.getElementsByClassName('tag-wrapper')[i].focus();
+    }
+  }
+
+  handleTagKeyDown(i, e) {
+    const tags = this.props.tags;
+
+    if (this.props.handleTagKeyDown) {
+      this.props.handleTagKeyDown(i, e);
+    }
+
+    if (e.keyCode === KEYS.BACKSPACE || e.keyCode === KEYS.DELETE) {
+      if (i === tags.length - 1) {
+        if (!this.props.resetInputOnDelete) {
+          this.textInput && this.textInput.focus();
+        } else {
+          this.resetAndFocusInput();
+        }
+      } else {
+        window.setTimeout(() => {
+          document.getElementsByClassName('tag-wrapper')[i].focus();
+        }, 1);
+      }
+      this.props.handleDelete(i, e);
+      e.stopPropagation();
+    }
+
+    if (e.keyCode === KEYS.LEFT_ARROW && i > 0) {
+      this.props.handleDrag(tags[i], i, i - 1);
+      window.setTimeout(() => {
+        document.getElementsByClassName('tag-wrapper')[i - 1].focus();
+      }, 1);
+    }
+
+    if (e.keyCode === KEYS.RIGHT_ARROW && i < tags.length - 1) {
+      this.props.handleDrag(tags[i], i, i + 1);
+      window.setTimeout(() => {
+        document.getElementsByClassName('tag-wrapper')[i + 1].focus();
+      }, 1);
     }
   }
 
@@ -393,7 +439,8 @@ class ReactTags extends Component {
           onDelete={this.handleDelete.bind(this, index)}
           moveTag={moveTag}
           removeComponent={removeComponent}
-          onTagClicked={this.handleTagClick.bind(this, index)}
+          onClick={this.handleTagClick.bind(this, index)}
+          onKeyDown={this.handleTagKeyDown.bind(this, index)}
           readOnly={readOnly}
           classNames={classNames}
           allowDragDrop={allowDragDrop}
@@ -401,6 +448,13 @@ class ReactTags extends Component {
       );
     });
   };
+
+  setTextInputRef = (input) => {
+    this.textInput = input;
+    if (this.props.textInputRef) {
+      this.props.textInputRef(input);
+    }
+  }
 
   render() {
     const tagItems = this.getTagItems();
@@ -424,9 +478,7 @@ class ReactTags extends Component {
     const tagInput = !this.props.readOnly ? (
       <div className={this.state.classNames.tagInput}>
         <input
-          ref={(input) => {
-            this.textInput = input;
-          }}
+          ref={this.setTextInputRef}
           className={this.state.classNames.tagInputField}
           type="text"
           placeholder={placeholder}
