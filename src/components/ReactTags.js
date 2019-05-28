@@ -518,7 +518,7 @@ class ReactTags extends Component {
       <div className={ClassNames(this.state.classNames.tags, 'react-tags-wrapper')}>
         {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
         <div className={this.state.classNames.selected}>
-          {connectDropTarget(<div>{tagItems}</div>)}
+          {connectDropTarget(<span>{tagItems}</span>)}
           {position === INPUT_FIELD_POSITIONS.INLINE && tagInput}
         </div>
         {position === INPUT_FIELD_POSITIONS.BOTTOM && tagInput}
