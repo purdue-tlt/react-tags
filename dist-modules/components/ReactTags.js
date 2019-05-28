@@ -25,6 +25,10 @@ var _uniq = require('lodash/uniq');
 
 var _uniq2 = _interopRequireDefault(_uniq);
 
+var _flow = require('lodash/flow');
+
+var _flow2 = _interopRequireDefault(_flow);
+
 var _Suggestions = require('./Suggestions');
 
 var _Suggestions2 = _interopRequireDefault(_Suggestions);
@@ -44,6 +48,12 @@ var _memoizeOne2 = _interopRequireDefault(_memoizeOne);
 var _Tag = require('./Tag');
 
 var _Tag2 = _interopRequireDefault(_Tag);
+
+var _ItemTypes = require('./ItemTypes');
+
+var _ItemTypes2 = _interopRequireDefault(_ItemTypes);
+
+var _DragAndDropHelper = require('./DragAndDropHelper');
 
 var _utils = require('./utils');
 
@@ -379,7 +389,8 @@ var ReactTags = function (_Component) {
           inputId = _props2.id,
           maxLength = _props2.maxLength,
           inline = _props2.inline,
-          inputFieldPosition = _props2.inputFieldPosition;
+          inputFieldPosition = _props2.inputFieldPosition,
+          connectDropTarget = _props2.connectDropTarget;
 
 
       var position = !inline ? _constants.INPUT_FIELD_POSITIONS.BOTTOM : inputFieldPosition;
@@ -425,7 +436,11 @@ var ReactTags = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: this.state.classNames.selected },
-          tagItems,
+          connectDropTarget(_react2.default.createElement(
+            'div',
+            null,
+            tagItems
+          )),
           position === _constants.INPUT_FIELD_POSITIONS.INLINE && tagInput
         ),
         position === _constants.INPUT_FIELD_POSITIONS.BOTTOM && tagInput
@@ -483,7 +498,8 @@ ReactTags.propTypes = {
   })),
   allowUnique: _propTypes2.default.bool,
   renderSuggestion: _propTypes2.default.func,
-  textInputRef: _propTypes2.default.func
+  textInputRef: _propTypes2.default.func,
+  connectDropTarget: _propTypes2.default.func
 };
 ReactTags.defaultProps = {
   placeholder: _constants.DEFAULT_PLACEHOLDER,
@@ -588,7 +604,7 @@ var _initialiseProps = function _initialiseProps() {
 };
 
 module.exports = {
-  WithContext: (0, _reactDnd.DragDropContext)(_reactDndHtml5Backend2.default)(ReactTags),
+  WithContext: (0, _flow2.default)((0, _reactDnd.DropTarget)(_ItemTypes2.default.TAG, {}, _DragAndDropHelper.dropCollect), (0, _reactDnd.DragDropContext)(_reactDndHtml5Backend2.default))(ReactTags),
   WithOutContext: ReactTags,
   KEYS: _constants.KEYS
 };

@@ -28,6 +28,10 @@ var _DragAndDropHelper = require('./DragAndDropHelper');
 
 var _utils = require('./utils');
 
+var _ItemTypes = require('./ItemTypes');
+
+var _ItemTypes2 = _interopRequireDefault(_ItemTypes);
+
 var _RemoveComponent = require('./RemoveComponent');
 
 var _RemoveComponent2 = _interopRequireDefault(_RemoveComponent);
@@ -39,8 +43,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ItemTypes = { TAG: 'tag' };
 
 var Tag = function (_Component) {
   _inherits(Tag, _Component);
@@ -115,4 +117,4 @@ Tag.defaultProps = {
   readOnly: false
 };
 
-exports.default = (0, _flow2.default)((0, _reactDnd.DragSource)(ItemTypes.TAG, _DragAndDropHelper.tagSource, _DragAndDropHelper.dragSource), (0, _reactDnd.DropTarget)(ItemTypes.TAG, _DragAndDropHelper.tagTarget, _DragAndDropHelper.dropCollect))(Tag);
+exports.default = (0, _flow2.default)((0, _reactDnd.DragSource)(_ItemTypes2.default.TAG, _DragAndDropHelper.tagSource, _DragAndDropHelper.dragSource), (0, _reactDnd.DropTarget)(_ItemTypes2.default.TAG, _DragAndDropHelper.tagTarget, _DragAndDropHelper.dropCollect))(Tag);

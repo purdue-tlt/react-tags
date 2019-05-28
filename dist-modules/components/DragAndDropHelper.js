@@ -11,7 +11,7 @@ var _utils = require('./utils');
 
 var tagSource = {
   beginDrag: function beginDrag(props) {
-    return { id: props.tag.index, index: props.index };
+    return { id: props.tag.id, index: props.index };
   },
   canDrag: function canDrag(props) {
     return (0, _utils.canDrag)(props);
