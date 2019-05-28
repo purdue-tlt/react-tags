@@ -10,10 +10,8 @@ import {
   dropCollect,
 } from './DragAndDropHelper';
 import { canDrag } from './utils';
-
+import ItemTypes from './ItemTypes';
 import RemoveComponent from './RemoveComponent';
-
-const ItemTypes = { TAG: 'tag' };
 
 class Tag extends Component {
   render() {
