@@ -437,7 +437,7 @@ var ReactTags = function (_Component) {
           'div',
           { className: this.state.classNames.selected },
           connectDropTarget(_react2.default.createElement(
-            'div',
+            'span',
             null,
             tagItems
           )),
