@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DropTarget, ConnectDropTarget, DragDropContext } from 'react-dnd';
+import { DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import noop from 'lodash/noop';
 import uniq from 'lodash/uniq';
