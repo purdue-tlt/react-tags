@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { DragDropContext } from 'react-dnd';
+import { DropTarget, ConnectDropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import noop from 'lodash/noop';
 import uniq from 'lodash/uniq';
+import flow from 'lodash/flow';
 import Suggestions from './Suggestions';
 import PropTypes from 'prop-types';
 import ClassNames from 'classnames';
 import memoizeOne from 'memoize-one';
 import Tag from './Tag';
-
+import ItemTypes from './ItemTypes';
+import { dropCollect } from './DragAndDropHelper';
 import { buildRegExpFromDelimiters } from './utils';
 
 //Constants
@@ -73,6 +75,7 @@ class ReactTags extends Component {
     allowUnique: PropTypes.bool,
     renderSuggestion: PropTypes.func,
     textInputRef: PropTypes.func,
+    connectDropTarget: PropTypes.func,
   };
 
   static defaultProps = {
@@ -471,6 +474,7 @@ class ReactTags extends Component {
       maxLength,
       inline,
       inputFieldPosition,
+      connectDropTarget,
     } = this.props;
 
     const position = !inline ? INPUT_FIELD_POSITIONS.BOTTOM : inputFieldPosition;
@@ -514,7 +518,7 @@ class ReactTags extends Component {
       <div className={ClassNames(this.state.classNames.tags, 'react-tags-wrapper')}>
         {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
         <div className={this.state.classNames.selected}>
-          {tagItems}
+          {connectDropTarget(<div>{tagItems}</div>)}
           {position === INPUT_FIELD_POSITIONS.INLINE && tagInput}
         </div>
         {position === INPUT_FIELD_POSITIONS.BOTTOM && tagInput}
@@ -524,7 +528,7 @@ class ReactTags extends Component {
 }
 
 module.exports = {
-  WithContext: DragDropContext(HTML5Backend)(ReactTags),
+  WithContext: flow(DropTarget(ItemTypes.TAG, {}, dropCollect), DragDropContext(HTML5Backend))(ReactTags),
   WithOutContext: ReactTags,
   KEYS: KEYS,
 };
